@@ -10,6 +10,8 @@ namespace frontend\modules\api\models;
 
 class Project extends \common\models\Project
 {
-    public $fields = [];
-    public $extrafields = [];
+    public function fields()
+    {
+        return ['id', 'title', 'active', 'created_by'];
+    }
 }

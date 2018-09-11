@@ -8,9 +8,20 @@
 
 namespace app\modules\api\controllers;
 
+use frontend\modules\api\models\Project;
+use yii\data\ActiveDataProvider;
 use yii\rest\Controller;
 
 class ProjectController extends Controller
 {
-    public $modelClass = 'frontend\modules\api\models\Project';
+    public function actionIndex()
+    {
+        $dp = new ActiveDataProvider(['query' => Project::find()]);
+        return $dp;
+    }
+
+    public function actionView($id)
+    {
+        return Project::findOne($id);
+    }
 }

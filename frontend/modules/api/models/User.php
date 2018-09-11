@@ -1,15 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Home
- * Date: 11.09.2018
- * Time: 2:03
- */
 
 namespace frontend\modules\api\models;
 
 class User extends \common\models\User
 {
-    public $fields = [];
-    public $extrafields = [];
+    public function fields()
+    {
+        return ['id', 'name' => function(User $user) {
+            return $user->username." ".User::STATS_LABELS[$user->status];
+        }];
+    }
+
+    public function extraFields()
+    {
+        return ['projectUsers', 'projects'];
+    }
+
 }

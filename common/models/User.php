@@ -91,6 +91,20 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * @return \Yii\db\ActiveQuery
+     */
+    public function getProjectUsers(){
+        return $this->hasMany(ProjectUser::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \Yii\db\ActiveQuery
+     */
+    public function getProjects(){
+        return $this->hasMany(Project::className(), ['id' => 'project_id']) ->via('projectUsers');
+    }
+
     public function beforeSave($insert)
     {
         if ($insert) $this->generateAuthKey();

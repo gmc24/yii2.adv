@@ -97,6 +97,21 @@ class UserController extends Controller
         ]);
     }
 
+    public function actionProfile()
+    {
+        $id = Yii::$app->user->id;
+        $model = $this->findModel($id);
+        $model->setScenario(User::SCEN_ADMIN_UPDATE);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

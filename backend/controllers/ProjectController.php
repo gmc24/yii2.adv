@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\Project;
 use common\models\search\ProjectSearch;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,6 +15,8 @@ use yii\filters\VerbFilter;
  */
 class ProjectController extends Controller
 {
+    public $users;
+
     /**
      * {@inheritdoc}
      */
@@ -65,6 +68,7 @@ class ProjectController extends Controller
     public function actionCreate()
     {
         $model = new Project();
+        $this->users = \common\models\User::find()->select('username')->indexBy('id')->column();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -86,13 +90,24 @@ class ProjectController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($this->loadModel($model) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+    private function loadModel(Project $model)
+    {
+        $data = Yii::$app->request->post($model->formName());
+        $projectUsers = $data[Project::REL_PROJECT_USERS] ?? null;
+        if ($projectUsers !== null) {
+//            $model->projectUsers = $projectUsers === ' ' ? [] : $projectUsers;
+        }
+
+        return $model->load(Yii::$app->request->post());
     }
 
     /**

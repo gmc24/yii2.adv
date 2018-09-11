@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -18,12 +19,22 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_at
  * @property int $updated_at
  *
- * @property User $createdBy
- * @property User $updatedBy
+ * @property User $creator
+ * @property User $updater
  * @property ProjectUser[] $projectUsers
  */
 class Project extends \yii\db\ActiveRecord
 {
+    const REL_PROJECT_USERS = 'projectUsers';
+
+    const STATUS_ENACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+    const STATUSES = [
+        self::STATUS_ACTIVE => 'активен',
+        self::STATUS_ENACTIVE => 'не активен'
+    ];
+
+
     /**
      * {@inheritdoc}
      */
@@ -54,6 +65,12 @@ class Project extends \yii\db\ActiveRecord
         return [
             ['class' => TimestampBehavior::class],
             ['class' => BlameableBehavior::class],
+            'saveRelations' => [
+                'class' => SaveRelationsBehavior::class,
+                'relations' => [
+                    'projectUsers',
+                ]
+            ]
         ];
     }
 
@@ -78,7 +95,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCreatedBy()
+    public function getCreator()
     {
         return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
@@ -86,7 +103,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUpdatedBy()
+    public function getUpdater()
     {
         return $this->hasOne(User::className(), ['id' => 'updated_by']);
     }

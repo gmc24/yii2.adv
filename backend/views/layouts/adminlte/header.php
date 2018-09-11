@@ -17,7 +17,7 @@ $user = Yii::$app->user->identity;
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
-
+        <?php if (isset($user)): ?>
         <div class="navbar-custom-menu">
 
             <ul class="nav navbar-nav">
@@ -34,7 +34,7 @@ $user = Yii::$app->user->identity;
                                  alt="User Image"/>
 
                             <p>
-                                <?=$user->username; ?> - admin
+                                <?=$user->username; ?>
                                 <small>Member since - <?=Yii::$app->formatter->asDate($user->created_at);?></small>
                             </p>
                         </li>
@@ -45,7 +45,7 @@ $user = Yii::$app->user->identity;
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="<?=\yii\helpers\Url::to(YII::$app->homeUrl.'user/'.$user->id)?>" class="btn btn-default btn-flat">Profile</a>
+                                <a href="<?=\yii\helpers\Url::to(YII::$app->homeUrl.'user/profile')?>" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
                                 <?= Html::a(
@@ -64,5 +64,6 @@ $user = Yii::$app->user->identity;
                 </li>
             </ul>
         </div>
+        <?php endif; ?>
     </nav>
 </header>

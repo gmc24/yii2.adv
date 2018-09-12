@@ -5,6 +5,7 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Project */
+/* @var $users array */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
@@ -31,11 +32,44 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'description:ntext',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
+            ['attribute' => 'active',
+                'value' => function (\common\models\Project $model) {
+                    return \common\models\Project::STATUSES[$model->active];
+                }],
+            ['attribute' => 'creator.username',
+                'label' => 'Creator',
+                'format' => 'html',
+                'value' => Html::a($users[$model->created_by], ['user/view', 'id' => $model->created_by])],
+            ['attribute' => 'updater.username',
+                'label' => 'Updater',
+                'format' => 'html',
+                'value' => Html::a($users[$model->updated_by], ['user/view', 'id' => $model->updated_by])],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
+
+
+    <h2>Project Team</h2>
+    <?php
+    echo \yii\grid\GridView::widget([
+        'dataProvider' => $model->getProjectTeam(),
+        'layout' => "{items}\n{pager}\n{summary}",
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            ['attribute' => 'user_id',
+                'filter' => $users,
+                'label' => 'User',
+                'format' => 'html',
+                'value' => function ($data) {
+                    return Html::a($data->getUserName(), ['user/view', 'id' => $data->user_id]);
+                },
+
+            ],
+//        'user.username',
+            'role:text',
+        ],
+    ]);
+    ?>
 
 </div>

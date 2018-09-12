@@ -6,9 +6,9 @@ use \unclead\multipleinput;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Project */
+/* @var $users array */
 /* @var $form yii\bootstrap\ActiveForm */
 
-var_dump($this->context->users);
 
 ?>
 
@@ -32,8 +32,7 @@ var_dump($this->context->users);
 
     <?= $form->field($model, 'active')->dropDownList(\common\models\Project::STATUSES) ?>
 
-    <p></p><hr/><p></p>
-
+    <?php if ($model->isNewRecord === false) : ?>
     <?= $form->field($model, \common\models\Project::REL_PROJECT_USERS)->widget(multipleinput\MultipleInput::className(), [
         'id' => 'project-users-widget',
         'max' => 4,
@@ -57,7 +56,7 @@ var_dump($this->context->users);
                 'name' => 'user_id',
                 'type' => 'dropDownList',
                 'title' => 'USER',
-                'items' => []
+                'items' => $users
             ],
         [
                 'name' => 'role',
@@ -67,6 +66,7 @@ var_dump($this->context->users);
             ],
         ]]);
     ?>
+<?php endif;?>
 
 
     <div class="form-group">

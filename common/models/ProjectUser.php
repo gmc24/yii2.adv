@@ -75,6 +75,12 @@ class ProjectUser extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    public function getUserName()
+    {
+        $username = User::findOne($this->user_id)->username;
+        return $username ? $username : '';
+    }
+
     /**
      * {@inheritdoc}
      * @return \common\models\query\ProjectUserQuery the active query used by this AR class.
@@ -86,6 +92,6 @@ class ProjectUser extends \yii\db\ActiveRecord
 
     public static function primaryKey()
     {
-        return ['project_id', 'user_id'];
+        return ['project_id', 'user_id', 'role'];
     }
 }

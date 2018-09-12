@@ -6,6 +6,8 @@ use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 
 /**
  * This is the model class for table "project".
@@ -50,13 +52,14 @@ class Project extends \yii\db\ActiveRecord
     {
         return [
 
-            [['title', 'description', 'active','created_by'], 'required'],
+            [['title', 'description', 'active'], 'required'],
             [['description'], 'string'],
-            [['created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+            [['created_by', 'updated_by'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['active'], 'boolean'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
+            [['projectUsers'], 'default'],
         ];
     }
 
@@ -109,11 +112,28 @@ class Project extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
      */
     public function getProjectUsers()
     {
         return $this->hasMany(ProjectUser::className(), ['project_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProjectTeam()
+    {
+        $dp = new ActiveDataProvider([
+            'query' => $this->getProjectUsers(),
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                ]
+            ],
+        ]);
+        return $dp;
     }
 
     /**

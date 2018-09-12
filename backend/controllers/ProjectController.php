@@ -15,8 +15,6 @@ use yii\filters\VerbFilter;
  */
 class ProjectController extends Controller
 {
-    public $users;
-
     /**
      * {@inheritdoc}
      */
@@ -55,8 +53,11 @@ class ProjectController extends Controller
      */
     public function actionView($id)
     {
+
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'users' => $this->getUsers(),
         ]);
     }
 
@@ -68,7 +69,6 @@ class ProjectController extends Controller
     public function actionCreate()
     {
         $model = new Project();
-        $this->users = \common\models\User::find()->select('username')->indexBy('id')->column();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -96,15 +96,20 @@ class ProjectController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'users' => $this->getUsers(),
         ]);
     }
 
+    /**
+     * @param Project $model
+     * @return boolean
+     */
     private function loadModel(Project $model)
     {
         $data = Yii::$app->request->post($model->formName());
         $projectUsers = $data[Project::REL_PROJECT_USERS] ?? null;
         if ($projectUsers !== null) {
-//            $model->projectUsers = $projectUsers === ' ' ? [] : $projectUsers;
+            $model->projectUsers = $projectUsers === ' ' ? [] : $projectUsers;
         }
 
         return $model->load(Yii::$app->request->post());
@@ -138,5 +143,10 @@ class ProjectController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function getUsers()
+    {
+        return \common\models\User::find()->select('username')->indexBy('id')->column();
     }
 }

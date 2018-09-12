@@ -9,6 +9,14 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'emailService' => [
+            'class' => \common\services\EmailService::class],
+        'projectService' => [
+            'class' => \common\services\ProjectService::class,
+            "on ". \common\services\ProjectService::EVENT_ASSIGN_ROLE => function(\common\services\AssignRoleEvent $e){
+                Yii::$app->emailService->send($e->user->email, 'New role', );
+            }
+        ],
     ],
     'modules' => [
         'rchat' => [

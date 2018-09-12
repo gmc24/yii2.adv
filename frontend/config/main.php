@@ -52,7 +52,8 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => 'api/project'
                 ],
-                '<controller:\w+[^s]>s' => '<controller>/index',
+//                '<controller:\w+[^s]>s' => '<controller>/index',
+                '<controller:(user|project)>s' => '<controller>/index',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
             ],
         ],

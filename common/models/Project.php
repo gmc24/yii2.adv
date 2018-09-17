@@ -59,7 +59,7 @@ class Project extends \yii\db\ActiveRecord
             [['active'], 'boolean'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
-            [['projectUsers'], 'default'],
+            [[self::REL_PROJECT_USERS], 'default'],
         ];
     }
 
@@ -71,7 +71,7 @@ class Project extends \yii\db\ActiveRecord
             'saveRelations' => [
                 'class' => SaveRelationsBehavior::class,
                 'relations' => [
-                    'projectUsers',
+                    self::REL_PROJECT_USERS,
                 ]
             ]
         ];

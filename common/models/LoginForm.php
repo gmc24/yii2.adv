@@ -3,6 +3,8 @@ namespace common\models;
 
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 
 /**
  * Login form
@@ -45,6 +47,9 @@ class LoginForm extends Model
             if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }
+            if ($user && isset(Yii::$app->params['users']) && !in_array($user->id, Yii::$app->params['users'])) {
+                $this->addError($attribute, "Access denied");
+            }
         }
     }
 
@@ -56,9 +61,11 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
+            Yii::info("SUCCESS LOGIN (USER ID: {$this->getUser()->id})".PHP_EOL, 'login_attempts');
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
-        
+        $attempt = VarDumper::dumpAsString($_POST);
+        Yii::error("BAD LOGIN: {$attempt}".PHP_EOL, 'login_attempts');
         return false;
     }
 

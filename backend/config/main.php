@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
+    'name' => 'Task Manager: Admin panel',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'layout' => 'adminlte/main',
@@ -45,7 +46,7 @@ return [
             'showScriptName' => false,
             'rules' => [
 //                '<controller:\w+[^s]>s' => '<controller>/index',
-                '<controller:(user|project)>s' => '<controller>/index',
+                '<controller:(user|project|task)>s' => '<controller>/index',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
             ],
         ],

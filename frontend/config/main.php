@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'name' => 'My Task Manager',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
@@ -34,6 +35,15 @@ return [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\FileTarget',
+//                    'enableRotation '=> 'true',
+                    'levels' => ['info', 'error'],
+//                    'maxFileSize' => 2048,
+                    'categories' => ['login_attempts'],
+                    'logVars' => [],
+                    'logFile' => "@runtime/logs/auth.log",
+                ],
             ],
         ],
         'errorHandler' => [
@@ -53,7 +63,7 @@ return [
                     'controller' => 'api/project'
                 ],
 //                '<controller:\w+[^s]>s' => '<controller>/index',
-                '<controller:(user|project)>s' => '<controller>/index',
+                '<controller:(user|project|task)>s' => '<controller>/index',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
             ],
         ],

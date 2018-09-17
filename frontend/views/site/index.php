@@ -2,10 +2,10 @@
 
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = 'My Task Manager';
 ?>
 
-<?=\common\modules\rchat\widgets\Chat::widget(['port'=>8080]);?>
+<?//=\common\modules\rchat\widgets\Chat::widget(['port'=>8080]);?>
 
 <div class="site-index">
 

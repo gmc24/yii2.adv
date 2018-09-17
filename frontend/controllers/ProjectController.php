@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\query\ProjectQuery;
 use Yii;
 use common\models\Project;
 use common\models\search\ProjectSearch;
@@ -52,6 +53,22 @@ class ProjectController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    /**
+     * @var $query ProjectQuery|\yii\db\ActiveQuery
+     */
+    public function actionInWork()
+    {
+        $searchModel = new ProjectSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $query = $dataProvider->query;
+        $query->byUser(Yii::$app->user->id);
+        $content = $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+        return $content;
     }
 
     /**

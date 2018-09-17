@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\ProjectUserQuery;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\behaviors\BlameableBehavior;
@@ -112,6 +113,7 @@ class Project extends \yii\db\ActiveRecord
     }
 
     /**
+     * @return ProjectUserQuery|\yii\db\ActiveQuery
      */
     public function getProjectUsers()
     {

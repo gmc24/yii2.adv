@@ -126,7 +126,7 @@ class Project extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return \yii\data\ActiveDataProvider
      */
     public function getProjectTeam()
     {

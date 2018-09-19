@@ -16,27 +16,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
+            ['attribute' => 'avatar',
+                'content' => function (\common\models\User $model) {
+                    return Html::img($model->getThumbUploadUrl('avatar', \common\models\User::AVATAR_THUMB));
+                }],
             'username',
-            'auth_key',
-            'password_hash',
-            'password_reset_token',
-            //'email:email',
-            //'status',
-            //'created_at',
-            //'updated_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            'email:email',
+            ['attribute' => 'status',
+                'filter' => \common\models\User::STATS_LABELS,
+                'value' => function(\common\models\User $model) {
+                    return \common\models\User::STATS_LABELS[$model->status];
+                }],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]); ?>
     <?php Pjax::end(); ?>

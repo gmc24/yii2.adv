@@ -23,8 +23,8 @@ use yii\behaviors\TimestampBehavior;
  * @property int $updated_at
  *
  * @property User $executor
- * @property User $createdBy
- * @property User $updatedBy
+ * @property User $creator
+ * @property User $updater
  */
 class Task extends \yii\db\ActiveRecord
 {
@@ -87,6 +87,10 @@ class Task extends \yii\db\ActiveRecord
         return $this->hasOne(Project::className(), ['id' => 'project_id']);
     }
 
+    public function getAvailableProjects($id)
+    {
+        return Project::find()->byUser($id)->select('title')->indexBy('id')->column();
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -99,7 +103,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCreatedBy()
+    public function getCreator()
     {
         return $this->hasOne(User::className(), ['id' => 'created_by']);
     }
@@ -107,7 +111,7 @@ class Task extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUpdatedBy()
+    public function getUpdater()
     {
         return $this->hasOne(User::className(), ['id' => 'updated_by']);
     }

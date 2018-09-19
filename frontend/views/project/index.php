@@ -14,28 +14,41 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Project', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+//            ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'title',
+            ['attribute' => 'title',
+                'content' => function ($data) {
+        return Html::a($data->title, ['view', 'id'=>$data->id]);},
+                'label' => 'Project Title',
+                ],
+            [
+                'attribute' => \common\models\Project::REL_PROJECT_USERS.' .role',
+                'value' => function(\common\models\Project $model) {
+                    return join(', ', Yii::$app->projectService->getRoles($model, Yii::$app->user->identity));
+                }
+            ],
             'description:ntext',
-            'active',
-            'created_by',
-            'updated_by',
-            //'created_at',
-            //'updated_at',
+            ['attribute' => 'active',
+                'filter' => \common\models\Project::STATUSES,
+                'value' => function(\common\models\Project $model) {
+                    return \common\models\Project::STATUSES[$model->active];
+                }],
+            ['attribute'=>'creator.username', 'label'=>'Creator'],
+            ['attribute'=>'updater.username', 'label'=>'Updater'],
+            'created_at:datetime',
+            'updated_at:datetime',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+//                'template' => '{view} {update}',
+                'template' => '{view}',
+                ],
         ],
     ]); ?>
     <?php Pjax::end(); ?>

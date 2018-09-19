@@ -3,6 +3,7 @@
 namespace common\services;
 
 use common\models\Project;
+use common\models\Task;
 use common\models\User;
 
 class AssignRoleEvent extends \yii\base\Event
@@ -44,4 +45,6 @@ class ProjectService extends \yii\base\Component
         $event->role = $role;
         $this->trigger(self::EVENT_ASSIGN_ROLE, $event);
     }
+
+
 }

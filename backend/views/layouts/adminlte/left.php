@@ -6,9 +6,11 @@
             [
                 'options' => ['class' => 'sidebar-menu tree', 'data-widget' => 'tree'],
                 'items' => [
-                    ['label' => 'Menu Yii2', 'options' => ['class' => 'header']],
-                    ['label' => 'Users', 'icon' => 'users', 'url' => ['/users']],
-                    ['label' => 'Projects', 'icon' => 'puzzle-piece', 'url' => ['/projects']],
+                    ['label' => 'Admin menu', 'options' => ['class' => 'header']],
+                    ['label' => 'Users', 'icon' => 'users', 'url' => ['user/index']],
+                    ['label' => 'Projects', 'icon' => 'puzzle-piece', 'url' => ['project/index']],
+                    ['label' => 'Tasks', 'icon' => 'file-text-o', 'url' => ['task/index']],
+                    ['label' => 'Back To Front', 'icon' => 'reply', 'url' => ['../']],
                     ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
                     [
                         'label' => 'Some tools',

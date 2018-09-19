@@ -26,6 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             'id',
             'title',
+            [
+                    'attribute' => \common\models\Project::REL_PROJECT_USERS.' .role',
+                'value' => function(\common\models\Project $model) {
+                    return join(', ', Yii::$app->projectService->getRoles($model, Yii::$app->user->identity));
+                }
+            ],
             'description:ntext',
             ['attribute' => 'active',
                 'filter' => \common\models\Project::STATUSES,

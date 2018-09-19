@@ -14,16 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -31,11 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'description:ntext',
-            'active',
-            'created_by',
-            'updated_by',
-            'created_at',
-            'updated_at',
+            ['attribute' => 'active',
+                'value' => function(\common\models\Project $model) {
+                    return \common\models\Project::STATUSES[$model->active];
+                }],
+            ['attribute'=>'creator.username', 'label'=>'Creator'],
+            ['attribute'=>'updater.username', 'label'=>'Updater'],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
     <?php echo \yii2mod\comments\widgets\Comment::widget([

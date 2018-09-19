@@ -44,21 +44,21 @@ class TaskController extends Controller
      * Lists all Task models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $searchModel = new TaskSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+//    public function actionIndex()
+//    {
+//        $searchModel = new TaskSearch();
+//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//
+//        return $this->render('index', [
+//            'searchModel' => $searchModel,
+//            'dataProvider' => $dataProvider,
+//        ]);
+//    }
 
     /**
      * @var $query TaskQuery
      */
-    public function actionInWork()
+    public function actionIndex()
     {
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -67,6 +67,7 @@ class TaskController extends Controller
         $content = $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+
         ]);
         return $content;
     }
@@ -81,6 +82,19 @@ class TaskController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+        ]);
+    }
+
+    public function actionTake($id)
+    {
+        $model = $this->findModel($id);
+
+        if (Yii::$app->taskService->takeTask($model, Yii::$app->user->identity)) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
         ]);
     }
 
@@ -99,6 +113,7 @@ class TaskController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'projects' => $model->getAvailableProjects(Yii::$app->user->id),
         ]);
     }
 
@@ -114,6 +129,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Information was updated');
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

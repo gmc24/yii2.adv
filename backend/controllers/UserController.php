@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\User;
 use common\models\search\UserSearch;
+use common\models\query\UserQuery;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -42,20 +43,19 @@ class UserController extends Controller
     /**
      * Lists all User models.
      * @return mixed
+     * @var $query UserQuery|\yii\db\ActiveQuery
      */
     public function actionIndex()
     {
-        /*  if (!Yii::$app->user->isGuest) {
-              return $this->goHome();
-          }*/
-
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
+        $query = $dataProvider->query;
+//        $query->onlyActive();
+        $content = $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+        return $content;
     }
 
     /**

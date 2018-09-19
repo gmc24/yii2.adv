@@ -21,6 +21,8 @@ return [
         ],
         'emailService' => [
             'class' => \common\services\EmailService::class],
+        'taskService' => [
+            'class' => \common\services\TaskService::class],
         'projectService' => [
             'class' => \common\services\ProjectService::class,
             "on " . \common\services\ProjectService::EVENT_ASSIGN_ROLE => function (\common\services\AssignRoleEvent $e) {

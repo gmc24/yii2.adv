@@ -84,7 +84,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             ['email', 'email', 'on' => [self::SCEN_ADMIN_CREATE, self::SCEN_ADMIN_UPDATE]],
             [['username', 'email'], 'unique', 'on' => [self::SCEN_ADMIN_CREATE, self::SCEN_ADMIN_UPDATE]],
-            ['password', 'string', 'min' => 6, 'on' => self::SCEN_ADMIN_CREATE],
+            ['password', 'string', 'min' => 6, 'on' => [self::SCEN_ADMIN_CREATE, self::SCEN_ADMIN_UPDATE]],
             ['avatar', 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => [self::SCEN_ADMIN_CREATE, self::SCEN_ADMIN_UPDATE]],
             [['username', 'email', 'password'], 'required', 'on' => self::SCEN_ADMIN_CREATE],
             [['username', 'email'], 'required', 'on' => self::SCEN_ADMIN_UPDATE],
@@ -102,7 +102,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @return \Yii\db\ActiveQuery
      */
     public function getProjects(){
-        return $this->hasMany(Project::className(), ['id' => 'project_id']) ->via('projectUsers');
+        return $this->hasMany(Project::className(), ['id' => 'project_id']) ->via(Project::REL_PROJECT_USERS);
     }
 
     public function beforeSave($insert)

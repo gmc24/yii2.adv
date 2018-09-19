@@ -20,16 +20,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-//            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            ['attribute' => 'id',
+//                'header' => 'ID',
+                'headerOptions' => ['width'=>'20'],
+                ],
             ['attribute' => 'title',
                 'content' => function ($data) {
         return Html::a($data->title, ['view', 'id'=>$data->id]);},
                 'label' => 'Project Title',
                 ],
             [
-                'attribute' => \common\models\Project::REL_PROJECT_USERS.' .role',
+                'attribute' => 'Your roles',
                 'value' => function(\common\models\Project $model) {
                     return join(', ', Yii::$app->projectService->getRoles($model, Yii::$app->user->identity));
                 }
@@ -40,10 +42,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function(\common\models\Project $model) {
                     return \common\models\Project::STATUSES[$model->active];
                 }],
-            ['attribute'=>'creator.username', 'label'=>'Creator'],
-            ['attribute'=>'updater.username', 'label'=>'Updater'],
-            'created_at:datetime',
-            'updated_at:datetime',
+            ['attribute'=>'creator',
+                'label'=>'Creator',
+                'format' => 'html',
+                'value' => function($data) { return $data->creator['username'] . '<br/>' . Yii::$app->formatter->format($data->created_at, 'datetime');},
+            ],
+            ['attribute'=>'updater.username',
+                'label'=>'Updater',
+                'format' => 'html',
+                'value' => function($data) { return $data->updater['username'] . '<br/>' . Yii::$app->formatter->format($data->updated_at, 'datetime');},
+            ],
 
             ['class' => 'yii\grid\ActionColumn',
 //                'template' => '{view} {update}',

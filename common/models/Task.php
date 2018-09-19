@@ -42,7 +42,7 @@ class Task extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'description', 'estimation', 'project_id', 'created_by', 'created_at'], 'required'],
+            [['title', 'description', 'estimation', 'project_id'], 'required'],
             [['description'], 'string'],
             [['estimation', 'project_id', 'executor_id', 'started_at', 'completed_at', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 255],
@@ -85,11 +85,6 @@ class Task extends \yii\db\ActiveRecord
     public function getProject()
     {
         return $this->hasOne(Project::className(), ['id' => 'project_id']);
-    }
-
-    public function getAvailableProjects($id)
-    {
-        return Project::find()->byUser($id)->select('title')->indexBy('id')->column();
     }
 
     /**

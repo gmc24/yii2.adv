@@ -43,19 +43,6 @@ class TaskController extends Controller
     /**
      * Lists all Task models.
      * @return mixed
-     */
-//    public function actionIndex()
-//    {
-//        $searchModel = new TaskSearch();
-//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//
-//        return $this->render('index', [
-//            'searchModel' => $searchModel,
-//            'dataProvider' => $dataProvider,
-//        ]);
-//    }
-
-    /**
      * @var $query TaskQuery
      */
     public function actionIndex()
@@ -67,6 +54,7 @@ class TaskController extends Controller
         $content = $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'projects' => Yii::$app->taskService->getAvailableProjects(Yii::$app->user->id),
 
         ]);
         return $content;
@@ -90,10 +78,25 @@ class TaskController extends Controller
         $model = $this->findModel($id);
 
         if (Yii::$app->taskService->takeTask($model, Yii::$app->user->identity)) {
+            Yii::$app->session->setFlash('success', "You've just started \"{$model->title}\" task");
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
+        return $this->render('view', [
+            'model' => $model,
+        ]);
+    }
+
+  public function actionFinish($id)
+    {
+        $model = $this->findModel($id);
+
+        if (Yii::$app->taskService->completeTask($model)) {
+            Yii::$app->session->setFlash('success', "Task \"{$model->title}\" was completed successfully!");
+            return $this->redirect(['view', 'id' => $id]);
+        }
+
+        return $this->render('view', [
             'model' => $model,
         ]);
     }
@@ -113,7 +116,7 @@ class TaskController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'projects' => $model->getAvailableProjects(Yii::$app->user->id),
+            'projects' => Yii::$app->taskService->getAvailableProjects(Yii::$app->user->id),
         ]);
     }
 
@@ -135,6 +138,7 @@ class TaskController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'projects' => Yii::$app->taskService->getAvailableProjects(Yii::$app->user->id),
         ]);
     }
 

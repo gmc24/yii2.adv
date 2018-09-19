@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'estimation')->textInput() ?>
 
-    <?= $form->field($model, 'project_id')->dropDownList($projects)?>
+    <?= $form->field($model, 'project_id')->dropDownList($projects)->label('Project')?>
 
 
 

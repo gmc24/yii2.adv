@@ -10,6 +10,11 @@ use yii\base\Component;
 
 class TaskService extends Component
 {
+    public function getAvailableProjects($id)
+    {
+        return Project::find()->byUser($id)->select('title')->indexBy('id')->column();
+    }
+
     public function canManage(Project $project, User $user)
     {
         return \Yii::$app->projectService->hasRole($project, $user, ProjectUser::ROLE_MANAGER);
@@ -27,14 +32,13 @@ class TaskService extends Component
 
     public function takeTask(Task $task, User $user)
     {
-        // FIXME[Eugene] add if executor_id is not empty
         $task->executor_id = $user->id;
         $task->started_at = time();
 
         return $task->save();
     }
 
-    public function completeTask(Task $task, User $user)
+    public function completeTask(Task $task)
     {
         $task->completed_at = time();
         return $task->save();

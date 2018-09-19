@@ -5,6 +5,7 @@ namespace common\services;
 use common\models\Project;
 use common\models\Task;
 use common\models\User;
+use yii\helpers\ArrayHelper;
 
 class AssignRoleEvent extends \yii\base\Event
 {
@@ -30,6 +31,20 @@ class ProjectService extends \yii\base\Component
     public function hasRole(Project $project, User $user, $role)
     {
         return in_array($role, $this->getRoles($project, $user));
+    }
+
+    public function getActiveExecutorsInAvailableProjects(User $user)
+    {
+        $executors = User::find()->select(['id', 'username'])->where(['in', 'id',
+            \common\models\ProjectUser::find()->select('user_id')->distinct()->where(['<>','role', \common\models\ProjectUser::ROLE_TESTER])
+                ->andWhere(['in', 'project_id',
+                    \common\models\ProjectUser::find()->byUser($user->id)->column()
+                ])
+                ->andWhere(['in', 'user_id', \common\models\User::find()->onlyActive()->column()])
+                ->column()
+            ])->asArray()->all();
+
+        return ArrayHelper::map($executors, 'id', 'username');
     }
 
     /**

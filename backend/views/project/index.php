@@ -38,7 +38,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function(\common\models\Project $model) {
                     return \common\models\Project::STATUSES[$model->active];
                 }],
-            ['attribute'=>'creator.username', 'label'=>'Creator'],
+//            ['attribute'=>'creator.username', 'label'=>'Creator'],
+            ['attribute'=>'creator',
+                'label'=>'Creator',
+                'value' => function (\common\models\Project $model) {return $model->creator->username;},
+                ],
             ['attribute'=>'updater.username', 'label'=>'Updater'],
             'created_at:datetime',
             'updated_at:datetime',

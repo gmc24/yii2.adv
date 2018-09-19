@@ -11,11 +11,10 @@ $this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
+    <div style="margin-bottom: 20px;"> <?=\common\modules\rchat\widgets\Chat::widget(['port'=>8080]);?></div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -34,6 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 }],
             'created_at:datetime',
             'updated_at:datetime',
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{view}',],
         ],
     ]); ?>
     <?php Pjax::end(); ?>
